@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sqlMapper.emp">
+	<select id="bbsAllList" parameterType="HashMap" resultType="yong.bbs.model.BbsDTO">
+		select * from (select rownum as rnum,a.* from (select * from jsp_bbs order by idx desc)a)b where <![CDATA[rnum>=]]>(#{cp}-1)*(#{listSize})+1 and <![CDATA[rnum<=]]>(#{cp}*#{listSize})
+		
+	</select>
+	
+	<select id="getTotalCnt" resultType="int">
+		select max(rownum) from jsp_bbs
+	</select>
+	
+	<insert id="bbsWrite" parameterType="yong.bbs.model.BbsDTO">
+		insert into jsp_bbs values(JSP_BBS_idx.nextval, #{writer}, #{pwd}, #{subject}, #{content}, sysdate,0,0,0,0)
+	</insert>
+	
+	<select id="bbsContent" parameterType="int" resultType="yong.bbs.model.BbsDTO">
+		select * from jsp_bbs where idx=#{idx}
+	</select>
+	
+	<update id="readContent" parameterType="int">
+		update jsp_bbs set readnum = readnum + 1 where idx=#{idx}
+	</update>
+</mapper>
